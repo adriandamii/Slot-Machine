@@ -20,11 +20,9 @@ function checkWin() {
         if (win === 2) {
             document.getElementById("amount").value = totalAmount + Math.floor(betAmount / 2);
             document.getElementsByTagName("h3")[0].textContent ="Very good!";
-        } else {
+        } else if (totalAmount >= betAmount) {
             document.getElementsByTagName("h3")[0].textContent ="Keep trying!";
-            if (totalAmount >= betAmount) {
-                document.getElementById("amount").value = totalAmount - betAmount;
-            }
+            document.getElementById("amount").value = totalAmount - betAmount;
         }
     }
 }
@@ -46,15 +44,17 @@ function loadAmount() {
     return amountInputStart.value;
 }
 
-function changeButtonState() {
+function changeButtonBet() {
     var buttonBet = document.getElementById("changeBet");
     var inputBet = document.getElementById("inputBet");
     if (buttonBet.textContent === "Change Bet") {
+        document.getElementById("turn").removeEventListener("click", checkWin, false);
         document.getElementsByTagName("h3")[0].textContent ="Type a value and save!";
         inputBet.setAttribute("onfocus", "this.value=''");
         inputBet.readOnly = false;
         buttonBet.textContent = "Save Bet";
     } else if (buttonBet.textContent === "Save Bet") {
+        play();
         document.getElementsByTagName("h3")[0].textContent ="Now play!";
         inputBet.removeAttribute("onfocus");
         inputBet.readOnly = true;
@@ -64,12 +64,11 @@ function changeButtonState() {
 
 function changeBet() {
     var buttonBet = document.getElementById("changeBet");
-    buttonBet.addEventListener("click", changeButtonState);
+    buttonBet.addEventListener("click", changeButtonBet);
     return inputBet.value;
 }
 
 function game() {
-    play();
     loadAmount();
     changeBet();
 }
